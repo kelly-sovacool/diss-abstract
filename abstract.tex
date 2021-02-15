@@ -13,15 +13,22 @@
 
 \small{
     Kelly L. Sovacool \\
-    March 2021
+    Feb. 2021
 }
 \end{center}
 
-intro paragraph introducing microbiome research and techniques: 16S sequencing and metabolomics.
+\section*{Specific Aims}
+
+Changes in the taxonomic composition and metabolic activity of human microbiomes have been observed in several diseases.
+In the case of colorectal cancer (CRC), evidence of toxigenic activity by gut microbes implies that these changes are not only a response to disease, but may also play a role in disease etiology.
+Taxonomic composition is commonly defined by amplicon sequencing of the 16S rRNA gene and clustering sequences into Operational Taxonomic Units (OTUs).
+Previous studies have built OTU-based machine learning models to classify stool samples as normal or cancerous, to serve as a less invasive diagnostic tool for CRC than colonoscopy.
+Efforts to find consistent changes in taxonomic composition of microbiomes between normal and dysbiotic states have found mixed success, in part because interpersonal variability in taxonomic composition sometimes exceeds the variability between disease states.
+Variability of microbiome composition between individuals with the same disease status may be explained by functional redundancy, where different microbial species carry out the same functions and thus can replace each other with little effect on the overall function of the community.
 
 16S tells us the taxonomic composition, i.e. which microbes are present in a sample.
 Can then compare taxonomic composition between individuals with different disease states (e.g. colorectal cancer).
-There is high interpersonal variability in taxonomic composition of the human gut microbiome. Ordination plots (e.g. NMDS) do not show any separation between disease states.
+There is high interpersonal variability in taxonomic composition of the human gut microbiome. Ordination plots (e.g. NMDS) do not show any separation between disease states. Possibly because of functional redundancy: different microbes can perform the same functions.
 ML models built on taxonomic composition do an okay job of discriminating stool samples from healthy and cancerous colons (AUROC ~0.7 for RF model on 490 samples).
 
 LC-MS/MS tells us the metabolites present -- the inputs and outputs of chemical reactions.
@@ -34,10 +41,32 @@ microbial ecology gets around this type of problem by using database-independing
 let's take this approach and apply it to metabolomics, cluster ms features into Operational Metabolomic Units.
 with metagenomics, only a small fraction of microbial genes are annotated with known functions.
 
-aim 1: build a tool mums2 to cluster untargeted LC-MS/MS features into OMUs.
+\subsection*{Aim 1: Build a tool to cluster untargeted LC-MS/MS features into Operational Metabolomic Units.}
+\textit{Hypothesis: LC-MS/MS features can be clustered into chemically similar OMUs.}
 
-aim 2: build ML models with OTUs, OMUs, and both. hypothesis: incorporating both OMUs and OTUs improves ML model performance for CRC classification.
+\begin{compactenum}[A.]
+    \item Calculate cosine similarity scores for all pairs of features.
+    \item Cluster features into Operational Metabolomic Units (OMUs) using OptiClust.
+    \item Label OMUs based on the known compounds they contain using GNPS.
+\end{compactenum}
 
-aim 3:  functional redundancy!
+\subsection*{Aim 2: Assess the impact of integrating metabolic profiles with taxonomic profiles on CRC classification.}
+\textit{Hypothesis: Incorporating both OMUs and OTUs improves ML model performance for CRC classification over using only OTUs.}
+
+\begin{compactenum}[A.]
+    \item Build taxonomic profiles with OTUs from 16S rRNA gene sequences and
+    metabolic profiles with OMUs from LC-MS/MS features.
+    \item Compare profiles of taxonomic and metabolomic composition within and between disease states.
+    \item Build machine learning models to classify samples as CRC or non-cancerous with OTUs, OMUs, or both and compare model performance.
+\end{compactenum}
+
+\subsection*{Aim 3. Assess the impact of integrating active metabolites with functional gene potential on CRC classification.}
+\textit{Hypothesis: Using known bacterial metabolites confirmed with mass spectrometry instead of all measured metabolites improves the classification modeling of samples as CRC or non-cancerous.}
+
+\begin{compactenum}[A.]
+    \item Annotate compounds from untargeted mass spectrometry with the GNPS database and select those known to be products of bacterial metabolic pathways with the MetaCyc database.
+    \item Calculate the intersection of pathways associated with active metabolites and the pathways from functional potential profiles from whole metagenomes.
+    \item Build machine learning models to classify samples as CRC or non-cancerous using all OMUs or only OMUS containing confirmed active bacterial metabolites and compare performance.
+\end{compactenum}
 
 \end{document}
