@@ -45,9 +45,9 @@ with metagenomics, only a small fraction of microbial genes are annotated with k
 \textit{Hypothesis: LC-MS/MS features can be clustered into chemically similar OMUs.}
 
 \begin{compactenum}[A.]
-    \item Calculate cosine similarity scores for all pairs of features.
-    \item Cluster features into Operational Metabolomic Units (OMUs) using OptiClust.
+    \item Calculate cosine similarity scores for all pairs of features and cluster features into Operational Metabolomic Units (OMUs) using OptiClust.
     \item Label OMUs based on the known compounds they contain using GNPS.
+    \item Test the tool using LC-MS/MS data from known compounds to determine the optimal cosine threshold for OMU clustering.
 \end{compactenum}
 
 \subsection*{Aim 2: Assess the impact of integrating metabolic profiles with taxonomic profiles on CRC classification.}
