@@ -1,19 +1,18 @@
 \documentclass[11pt]{article}
 \input{preamble.tex}
-% chalk talk from NSF GRFP outline on OMU project https://gist.github.com/kelly-sovacool/55a99e723d8f42c8fed76efd5a9e8771
 
 \begin{document}
 \sloppy
 \begin{center}
 \large{\textbf{
-    Developing tools for characterizing the taxonomic and functional composition of host-associated microbiomes
+    Building Tools for Modeling Disease States of the Human Gut Microbiome
 }}
 
 \vspace{11pt}
 
 \small{
     Kelly L. Sovacool \\
-    Feb. 2021
+    Nov. 2021
 }
 \end{center}
 
@@ -30,43 +29,36 @@ Variability of microbiome composition between individuals with the same disease 
 Can then compare taxonomic composition between individuals with different disease states (e.g. colorectal cancer).
 There is high interpersonal variability in taxonomic composition of the human gut microbiome. Ordination plots (e.g. NMDS) do not show any separation between disease states. Possibly because of functional redundancy: different microbes can perform the same functions.
 ML models built on taxonomic composition do an okay job of discriminating stool samples from healthy and cancerous colons (AUROC ~0.7 for RF model on 490 samples).
-
-LC-MS/MS tells us the metabolites present -- the inputs and outputs of chemical reactions.
-Can use metabolomics to build profiles of functional composition, i.e. what the microbes (and the host) are doing.
-omics integration: can we identify which microbes are performing which functions?
-
-with metabolomics, only 2 percent of untargeted lc-ms/ms features can be annotated with known metabolites.
-why should we throw out that data?
-microbial ecology gets around this type of problem by using database-independing approaches for clustering sequences into OTUs.
-let's take this approach and apply it to metabolomics, cluster ms features into Operational Metabolomic Units.
+Can use metagenomics to build profiles of functional (potential) composition, i.e. what the microbes are capable of doing.
+omics integration: can we identify which microbes are capable of performing which functions?
 with metagenomics, only a small fraction of microbial genes are annotated with known functions.
 
-\subsection*{Aim 1: Build a tool to cluster untargeted LC-MS/MS features into Operational Metabolomic Units.}
-\textit{Hypothesis: LC-MS/MS features can be clustered into chemically similar OMUs.}
+\subsection*{Aim 1: Determine the performance of OptiFit in clustering reference-based OTUs against \textit{de novo} OTUs.}
+\textit{Hypothesis: OptiFit clusters reference-based OTUs at nearly the same quality as OptiClust and with faster execution speeds.}
 
 \begin{compactenum}[A.]
-    \item Calculate cosine similarity scores for all pairs of features and cluster features into Operational Metabolomic Units (OMUs) using OptiClust.
-    \item Label OMUs based on the known compounds they contain using GNPS.
-    \item Test the tool using LC-MS/MS data from known compounds to determine the optimal cosine threshold for OMU clustering.
+    \item \textit{De novo} cluster reference databases into OTUs with OptiClust, then cluster datasets to the database OTUs with OptiFit.
+    \item \textit{De novo} cluster half of the sequences in each dataset with OptiClust, then cluster the remaining sequences to the \textit{de novo} OTUs with OptiFit.
+    \item Compare the OTU quality of the two OptiFit strategies above versus that of \textit{de novo} clustering the datasets with OptiClust.
 \end{compactenum}
 
-\subsection*{Aim 2: Assess the impact of integrating metabolic profiles with taxonomic profiles on CRC classification.}
-\textit{Hypothesis: Incorporating both OMUs and OTUs improves ML model performance for CRC classification over using only OTUs.}
+\subsection*{Aim 2. Build machine learning models with OTUs and clinical features to predict the severity of CDI and identify important micriobial features.}
+\textit{Hypothesis: OTU- and clinical-based machine learning models can be used to predict the severity of CDI.}
 
 \begin{compactenum}[A.]
-    \item Build taxonomic profiles with OTUs from 16S rRNA gene sequences and
-    metabolic profiles with OMUs from LC-MS/MS features.
-    \item Compare profiles of taxonomic and metabolomic composition within and between disease states.
-    \item Build machine learning models to classify samples as CRC or non-cancerous with OTUs, OMUs, or both and compare model performance.
+    \item Cluster 16S rRNA amplicon sequences from the R21 cohort into \textit{de novo} OTUs.
+    \item Build models with OTUs and clinical features using the R21 dataset to predict the IDSA severity score of CDI cases and identify the most important features in model performance.
+    \item Use OptiFit to fit the ERIN cohort into the R21 OTUs, then use it as a validation test set for the best R21-based model.
 \end{compactenum}
 
-\subsection*{Aim 3. Assess the impact of integrating active metabolites with functional gene potential on CRC classification.}
-\textit{Hypothesis: Using all measured metabolites instead of only known bacterial metabolites improves the classification modeling of samples as CRC or non-cancerous.}
+\subsection*{Aim 3. Explore the impact of functional redundancy on the perforamnce of models to predict CRC and CDI.}
+\textit{Hypothesis: Incorporating functional potential along with OTUs as features improves the performance of disease prediction models.}
 
 \begin{compactenum}[A.]
-    \item Annotate compounds from untargeted mass spectrometry with the GNPS database and select those known to be products of bacterial metabolic pathways with the MetaCyc database.
-    \item Calculate the intersection of pathways associated with active metabolites and the pathways from functional potential profiles from whole metagenomes.
-    \item Build machine learning models to classify samples as CRC or non-cancerous using all OMUs or only confirmed active bacterial metabolites and compare performance.
+    \item Assemble metagenomes and identify known gene functions in CRC and CDI datasets.
+    \item Characterize the presence of functional redundancy within samples.
+    \item Build ML models using OTUs, known metagenomic functions, or both as features and compare performance.
 \end{compactenum}
+
 
 \end{document}
