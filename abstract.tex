@@ -11,54 +11,86 @@
 \vspace{11pt}
 
 \small{
-    Kelly L. Sovacool \\
-    Nov. 2021
+    Kelly L. Sovacool
 }
 \end{center}
 
 \section*{Specific Aims}
 
-Changes in the taxonomic composition and metabolic activity of human microbiomes have been observed in several diseases.
-In the case of colorectal cancer (CRC), evidence of toxigenic activity by gut microbes implies that these changes are not only a response to disease, but may also play a role in disease etiology.
-Taxonomic composition is commonly defined by amplicon sequencing of the 16S rRNA gene and clustering sequences into Operational Taxonomic Units (OTUs).
-Previous studies have built OTU-based machine learning models to classify stool samples as normal or cancerous, to serve as a less invasive diagnostic tool for CRC than colonoscopy.
-Efforts to find consistent changes in taxonomic composition of microbiomes between normal and dysbiotic states have found mixed success, in part because interpersonal variability in taxonomic composition sometimes exceeds the variability between disease states.
-Variability of microbiome composition between individuals with the same disease status may be explained by functional redundancy, where different microbial species carry out the same functions and thus can replace each other with little effect on the overall function of the community.
+Changes in the taxonomic composition and metabolic activity of human microbiomes
+have been observed in several diseases including colorectal cancer (CRC) and
+\textit{Clostridioides difficile} infection (CDI).
+Taxonomic composition is commonly defined by amplicon sequencing the 16S rRNA
+gene and clustering sequences into Operational Taxonomic Units (OTUs).
+OptiClust, a \textit{de novo} OTU clustering method, has been
+shown to produce higher quality OTU assignments than other methods.
+OTU assignments from \textit{de novo} clustering may
+change when new sequences are added to a dataset.
+However, one may wish to incorporate new samples into a previously clustered
+dataset without re-clustering all sequences, such as when
+comparing across datasets or deploying machine learning (ML) models with OTUs as
+features.
+To fill this need, the Schloss Lab is developing OptiFit, a reference-based
+clustering method that assigns sequences to existing \textit{de novo} OTUs.
+OptiFit is being refined and tested to determine its performance compared to
+OptiClust, with the ultimate goal of applying it to test new microbiome data against deployed ML models.
 
-16S tells us the taxonomic composition, i.e. which microbes are present in a sample.
-Can then compare taxonomic composition between individuals with different disease states (e.g. colorectal cancer).
-There is high interpersonal variability in taxonomic composition of the human gut microbiome. Ordination plots (e.g. NMDS) do not show any separation between disease states. Possibly because of functional redundancy: different microbes can perform the same functions.
-ML models built on taxonomic composition do an okay job of discriminating stool samples from healthy and cancerous colons (AUROC ~0.7 for RF model on 490 samples).
-Can use metagenomics to build profiles of functional (potential) composition, i.e. what the microbes are capable of doing.
-omics integration: can we identify which microbes are capable of performing which functions?
-with metagenomics, only a small fraction of microbial genes are annotated with known functions.
+Previous studies have built OTU-based ML models to distinguish CDI
+cases from controls in order to demonstrate the importance of the gut microbiome
+in CDI and to identify the most important microbial features contributing to
+model performance.
+We now have access to a large dataset of amplicon sequences and
+clinical features from about 4,000 stool samples of CDI cases, diarrheal
+controls, and non-diarrheal controls (R21 cohort).
+OTU-based ML models could be built to not only distinguish CDI cases but also to
+predict the severity of infection in CDI cases based on clinical lab results.
+Additionally, an external dataset (ERIN cohort) could be used as a validation
+set to test the best model built on the R21 cohort.
+Permutation feature importance would identify the most important microbial
+features contributing to model performance, which could help clinicians in
+identifying cases that may become severe to inform treatment strategies.
+
+Efforts to find consistent changes in taxonomic composition of microbiomes
+between normal and dysbiotic states have found mixed success, in part because
+interpersonal variability in taxonomic composition sometimes exceeds the
+variability between disease states.
+Variability of microbiome composition between individuals with the same disease
+status may be explained by functional redundancy, where different microbial
+species carry out the same functions and thus can replace each other with little
+effect on the overall function of the community.
+Previous studies have built OTU-based ML models to classify stool
+samples as normal or cancerous to serve as a less invasive diagnostic tool for
+CRC than colonoscopy, but have only achieved modest performance.
+Incorporating the known functional potential of the microbiome from metagenomics
+data may help account for functional redunancy and improve the performance of
+OTU-based models in classifying CRC, predicting CDI severity, or other modeling
+problems.
 
 \subsection*{Aim 1: Determine the performance of OptiFit in clustering reference-based OTUs against \textit{de novo} OTUs.}
 \textit{Hypothesis: OptiFit clusters reference-based OTUs at nearly the same quality as OptiClust and with faster execution speeds.}
 
 \begin{compactenum}[A.]
-    \item \textit{De novo} cluster reference databases into OTUs with OptiClust, then cluster datasets to the database OTUs with OptiFit.
-    \item \textit{De novo} cluster half of the sequences in each dataset with OptiClust, then cluster the remaining sequences to the \textit{de novo} OTUs with OptiFit.
+    \item \textit{De novo} cluster databases into OTUs, then cluster datasets to the database OTUs with OptiFit.
+    \item \textit{De novo} cluster half of the sequences in each dataset, then cluster the remaining sequences to the \textit{de novo} OTUs with OptiFit.
     \item Compare the OTU quality of the two OptiFit strategies above versus that of \textit{de novo} clustering the datasets with OptiClust.
 \end{compactenum}
 
-\subsection*{Aim 2. Build machine learning models with OTUs and clinical features to predict the severity of CDI and identify important micriobial features.}
-\textit{Hypothesis: OTU- and clinical-based machine learning models can be used to predict the severity of CDI.}
+\subsection*{Aim 2. Build ML models with OTUs and clinical features to predict the severity of CDI and identify important micriobial features.}
+\textit{Hypothesis: OTU- and clinical-based ML models can be used to predict the severity of CDI.}
 
 \begin{compactenum}[A.]
-    \item Cluster 16S rRNA amplicon sequences from the R21 cohort into \textit{de novo} OTUs.
-    \item Build models with OTUs and clinical features using the R21 dataset to predict the IDSA severity score of CDI cases and identify the most important features in model performance.
-    \item Use OptiFit to fit the ERIN cohort into the R21 OTUs, then use it as a validation test set for the best R21-based model.
+    \item Cluster sequences from the R21 cohort into \textit{de novo} OTUs.
+    \item Build models using the R21 dataset to predict the severity score of CDI cases and identify the most important features.
+    \item Use OptiFit-clustered OTUs from the ERIN cohort as a validation test set for the best R21-based model.
 \end{compactenum}
 
-\subsection*{Aim 3. Explore the impact of functional redundancy on the perforamnce of models to predict CRC and CDI.}
+\subsection*{Aim 3. Explore the impact of functional redundancy on model performance.}
 \textit{Hypothesis: Incorporating functional potential along with OTUs as features improves the performance of disease prediction models.}
 
 \begin{compactenum}[A.]
-    \item Assemble metagenomes and identify known gene functions in CRC and CDI datasets.
+    \item Identify known gene functions in CRC and CDI metagenomes.
     \item Characterize the presence of functional redundancy within samples.
     \item Build ML models using OTUs, known metagenomic functions, or both as features and compare performance.
 \end{compactenum}
-
 
 \end{document}
